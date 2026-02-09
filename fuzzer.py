@@ -11,20 +11,42 @@ def run_binary(payload):
 	)
 	return result.returncode == -11
 	
-# Test 1, normal input
-for i in range(2):
-	usr_str = ""
-	if i == 0:
-		print("Test 1: Sending 'Hello'")
-		usr_str = b"hello"
-	if i == 1:
-		print("Test 2: Sending buffer of 100 A's")
-		usr_str = b"A" * 100
-	crashed = run_binary(usr_str)
-	if crashed:
-		print("Result: The program crashed!")
-	else:
-		print("Result: The program didn't crash!")
+	
+def check_crash():
+	for i in range(10, 210, 10):
+		payload = b"A" * i
+		check = run_binary(payload)
+		print(f"[*] Checking crash With {i} bytes...")
+		if check:
+			print(f"[+] Crashed at size between {i-10} - {i} bytes")
+			for j in range(i-10, i+1, 1):
+				new_payload = b"A" * j
+				recheck = run_binary(new_payload)
+				print(f"[*] Pin pointing exact crash bytes...")
+				print(f"[*] Checking crash With {j} bytes...")
+				if recheck:
+					print(f"[+] Crashed at {j} bytes")
+					return j
+			
+		else:
+			print(f"[-] Bytes {i} OK")
+			
+	print("[-] No Crash found\nFuzzer Ended!")
+	return -1
+
+
+print("\n")
+print("=" * 40)
+print("[*] Starting the Fuzzer")
+print("=" * 40)
+print("\n")
+size = check_crash()
+
+#Size don't have any function for now but maybe for future, for now its there to just store the size where crashed if any 
+
+
+			
+			
 
 
 	
