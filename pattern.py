@@ -19,9 +19,10 @@ def pattern_generator(length):
 
 def position_finder(pattern, value):
     found = False
+    val_len = len(value)
     length = len(pattern)
-    for i in range(length - 2):
-        chunk = pattern[i:i+3]
+    for i in range(length - val_len + 1):
+        chunk = pattern[i:i+val_len]
         if chunk == value:
             found = True
             return i
